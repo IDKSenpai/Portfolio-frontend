@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { Icons } from "../icons/Icon";
 import api from "../api/axios";
 
 const ContactForm: React.FC = () => {
   const IconPlane = Icons.plane;
+  const turnstileRef = useRef<any>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<
     "idle" | "success" | "error"
   >("idle");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -25,7 +28,22 @@ const ContactForm: React.FC = () => {
     });
   };
 
+  const handleCaptchaSuccess = (token: string) => {
+    setCaptchaToken(token);
+  };
+
+  const handleCaptchaError = () => {
+    setCaptchaToken(null);
+    setSubmitStatus("error");
+  };
+
   const handleSubmit = async () => {
+    // Verify captcha is completed
+    if (!captchaToken) {
+      setSubmitStatus("error");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus("idle");
 
@@ -34,6 +52,7 @@ const ContactForm: React.FC = () => {
         name: formData.name,
         email: formData.email,
         message: formData.message,
+        captchaToken: captchaToken, // Send token to backend for verification
       });
 
       if (response.status === 200) {
@@ -44,12 +63,20 @@ const ContactForm: React.FC = () => {
           email: "",
           message: "",
         });
+
+        // Reset captcha
+        setCaptchaToken(null);
+        turnstileRef.current?.reset();
       }
-      // Reset success message after 3 seconds
+
       setTimeout(() => setSubmitStatus("idle"), 3000);
     } catch (err) {
       setSubmitStatus("error");
       console.error("Error submitting form:", err);
+
+      // Reset captcha on error
+      setCaptchaToken(null);
+      turnstileRef.current?.reset();
     } finally {
       setIsSubmitting(false);
     }
@@ -118,6 +145,21 @@ const ContactForm: React.FC = () => {
             />
           </div>
 
+          {/* Cloudflare Turnstile */}
+          <div className="flex justify-center">
+            <Turnstile
+              ref={turnstileRef}
+              siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY || ""}
+              onSuccess={handleCaptchaSuccess}
+              onError={handleCaptchaError}
+              onExpire={() => setCaptchaToken(null)}
+              options={{
+                theme: "dark", // Matches your dark theme
+                size: "normal",
+              }}
+            />
+          </div>
+
           {/* Submit Button */}
           <button
             onClick={handleSubmit}
@@ -125,7 +167,8 @@ const ContactForm: React.FC = () => {
               isSubmitting ||
               !formData.name ||
               !formData.email ||
-              !formData.message
+              !formData.message ||
+              !captchaToken
             }
             className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
@@ -152,7 +195,9 @@ const ContactForm: React.FC = () => {
           {/* Error Message */}
           {submitStatus === "error" && (
             <div className="bg-red-900/30 border border-red-600 rounded-lg p-3 text-red-400 text-sm text-center">
-              Failed to send message. Please try again.
+              {!captchaToken && !isSubmitting
+                ? "Please complete the verification challenge."
+                : "Failed to send message. Please try again."}
             </div>
           )}
         </div>
