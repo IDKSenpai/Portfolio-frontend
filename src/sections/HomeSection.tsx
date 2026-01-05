@@ -117,7 +117,7 @@ const HomeSection: React.FC = () => {
           <div className="relative w-50 h-50 lg:w-96 lg:h-96 rounded-full overflow-hidden border-4 border-white/10 shadow-[0_0_50px_rgba(239,68,68,0.3)] group-hover:shadow-[0_0_80px_rgba(239,68,68,0.5)] transition-all duration-500">
             <div className="w-full h-full bg-linear-to-br from-red-900/20 to-purple-900/20" />
             <div className={`absolute inset-0 bg-cover bg-center`}>
-              <img src={data?.profile_image} alt="profile" loading="lazy" />
+              <img src={data?.profile_image} alt="profile" />
             </div>
           </div>
 
