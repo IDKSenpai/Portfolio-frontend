@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Icons } from "../icons/Icon";
 import ProjectCard from "../components/ProjectCard";
 import type { ContactInformation } from "../data/index";
-import api from "../api/axios";
 
 const ProjectsSection: React.FC = () => {
   const IconChevronRight = Icons.chevronRight;
@@ -11,23 +10,14 @@ const ProjectsSection: React.FC = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
-  const [contactInfo, setContactInfo] = useState<ContactInformation | null>(
-    null
-  );
-
-  useEffect(() => {
-    const fetchContactInformation = async () => {
-      try {
-        // Replace with your actual API URL
-        const response = await api.get("information-section");
-        // Assuming the API returns an array, take the first item
-        setContactInfo(response.data);
-      } catch (err) {
-        console.error("Error fetching contact information:", err);
-      }
-    };
-    fetchContactInformation();
-  }, []);
+  const [contactInfo] = useState<ContactInformation>({
+    email: 'k.kheang087@gmail.com',
+    contact: '+855 87 526 032',
+    location: 'Phnom Penh, Cambodia',
+    linkedin_acc: 'https://www.linkedin.com/in/kech-kheang-b725202ba?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app',
+    github_acc: 'https://github.com/IDKSenpai',
+    facebook_acc: 'https://www.facebook.com/kech.kheang.9'
+  } as ContactInformation);
 
   const checkScrollButtons = () => {
     if (scrollContainerRef.current) {

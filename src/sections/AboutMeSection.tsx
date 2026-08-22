@@ -1,26 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import type { AboutMe, CategoryAboutMe } from "../data";
-import api from "../api/axios";
 
 const AboutMeSection: React.FC = () => {
-  const [category, setCategory] = useState<CategoryAboutMe[]>([]);
-  const [inf, setInfo] = useState<AboutMe[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [categories, infos] = await Promise.all([
-          api.get<CategoryAboutMe[]>("/category-about-me"),
-          api.get<AboutMe[]>("/about-me"),
-        ]);
-        setCategory(categories.data);
-        setInfo(infos.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, []);
+  const [category] = useState<CategoryAboutMe[]>([
+    { id: 1, title: '.Career Objective' } as CategoryAboutMe,
+    { id: 2, title: '.Interest & Hobbies' } as CategoryAboutMe,
+    { id: 3, title: '.Short Biography' } as CategoryAboutMe,
+  ]);
+  const [inf] = useState<AboutMe[]>([
+    { id: 1, category_about_me_id: undefined, description: 'My name is Kech Kheang. I am from Cambodia. I am currently studying information technology and enjoy learning new skills related to computers and software development.' } as AboutMe,
+    { id: 2, category_about_me_id: 1, description: 'My career objective is to become a professional software developer. I aim to improve my programming skills and contribute to building useful and efficient applications.' } as AboutMe,
+    { id: 3, category_about_me_id: 2, description: '• Technical interests (coding, learning tech)' } as AboutMe,
+    { id: 4, category_about_me_id: 2, description: '• Personal hobbies (music, sports, reading, gaming)' } as AboutMe,
+    { id: 5, category_about_me_id: 3, description: 'I am a motivated and curious individual with a strong interest in technology. I enjoy learning about software development and computer systems. My goal is to grow my skills and build a successful career in the IT field.' } as AboutMe,
+  ]);
 
   return (
     <>

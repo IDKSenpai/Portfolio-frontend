@@ -4,7 +4,7 @@ import AboutMeSection from "./sections/AboutMeSection";
 import EducationSection from "./sections/EducationSection";
 import SkillsSection from "./sections/SkillSection";
 import ProjectSection from "./sections/ProjectSection";
-import ContactSection from "./sections/ContactSection";
+// import ContactSection from "./sections/ContactSection";
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
         <EducationSection />
         <SkillsSection />
         <ProjectSection />
-        <ContactSection />
+        {/* <ContactSection /> */}
       </main>
     </>
   );

@@ -1,34 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 // import { FaGithub, FaExternalLinkAlt, FaCode } from "react-icons/fa";
 import { Icons } from "../icons/Icon";
 import type { Project } from "../data/index";
-import api from "../api/axios";
 
 const ProjectCard: React.FC = () => {
   const IconCode = Icons.code;
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  const fetchProjects = async () => {
-    try {
-      setLoading(true);
-      // Replace with your actual API URL
-      const response = await api.get("/project-section");
-
-      setProjects(response.data);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
-      console.error("Error fetching projects:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [projects] = useState<Project[]>([
+    {
+      id: 1,
+      title: "Naty25.com",
+      description:
+        "Shop your best products at Naty25.com - Your trusted online store in Cambodia for personal development resources.",
+      tools: JSON.stringify(["React", "Laravel", "TailwindCSS", "MySQL"]),
+      link: "https://naty25.com",
+      img: "https://naty25.com/web-app-manifest-512x512.png",
+    } as Project,
+  ]);
 
   // Function to determine if URL is a GitHub link
   const isGitHubLink = (url: string): boolean => {
@@ -63,33 +50,6 @@ const ProjectCard: React.FC = () => {
       isGitHub,
     };
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-red-600 mx-auto mb-4"></div>
-          <p className="text-white text-lg">Loading projects...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-black">
-        <div className="text-center bg-neutral-900 border-2 border-red-600 rounded-lg p-8 max-w-md">
-          <p className="text-red-500 text-lg mb-4">Error: {error}</p>
-          <button
-            onClick={fetchProjects}
-            className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   if (projects.length === 0) {
     return (

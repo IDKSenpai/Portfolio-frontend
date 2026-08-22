@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { LuCodeXml } from "react-icons/lu";
 import { RiTelegram2Fill } from "react-icons/ri";
-import api from "../api/axios";
 import { type Home } from "../data";
 
 const HomeSection: React.FC = () => {
-  const [data, setData] = useState<Home | null>(null);
+  const [data] = useState<Home>({
+    welcome_message: "Welcome to My Portfolio",
+    greeting: "Hi, I'm",
+    name: "Kheang",
+    short_introduction:
+      "Passionate about building modern, responsive, and user-friendly web applications. I transform ideas into practical and interactive digital solutions with seamless experiences.",
+    profile_image: "profile.jpg",
+  } as Home);
 
   // Hardcoded phrases
   const texts = "-Stack Developer";
@@ -16,19 +22,6 @@ const HomeSection: React.FC = () => {
   const [loopNum, setLoopNum] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get<Home>("/home-section");
-        setData(response.data);
-      } catch (error) {
-        console.error("Error fetching home section data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -46,7 +39,7 @@ const HomeSection: React.FC = () => {
           setLoopNum(loopNum + 1);
         }
       },
-      isDeleting ? speed / 2 : speed
+      isDeleting ? speed / 2 : speed,
     );
 
     return () => clearTimeout(timeout);
@@ -99,7 +92,12 @@ const HomeSection: React.FC = () => {
             <span className="ml-1">View Projects</span>
           </a>
 
-          <a href="#contact" className="contact-btn">
+          <a
+            href="https://t.me/KechKheang"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="contact-btn"
+          >
             <RiTelegram2Fill className="icon" />
             <span>Contact Me</span>
           </a>

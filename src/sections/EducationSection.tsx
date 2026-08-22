@@ -1,22 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Icons } from "../icons/Icon";
 import type { Education } from "../data";
-import api from "../api/axios";
 
 const EducationSection: React.FC = () => {
-  const [data, setData] = useState<Education[]>([]);
+  const [data] = useState<Education[]>([
+    {
+      icon: 'school',
+      level: 1,
+      year: '2015 -2021',
+      degree: 'Degree',
+      school: 'Tuan Fa 2',
+      program: 'Khmer Language Program',
+    },
+    {
+      icon: 'school',
+      year: '2015 -2021',
+      level: 2,
+      degree: 'General English Program',
+      school: 'Australian Centre for Education',
+      program: 'English Language Program',
+    },
+    {
+      icon: 'university',
+      year: '2022 til Now',
+      level: 3,
+      degree: 'Bachelor\'s Degree',
+      school: 'The University of Cambodia',
+      program: 'Information Technology',
+    }
+  ]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await api.get<Education[]>("/education-section");
-        setData(response.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, []);
 
   return (
     <section id="education" className="min-h-screen px-6 md:px-8 lg:px-10">
